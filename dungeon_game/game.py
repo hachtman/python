@@ -26,6 +26,7 @@ STATUS = {
 
 
 def clear_screen():
+    """Clears the screen"""
     os.system('cls' if os.name == 'nt' else 'clear')
 
 
@@ -36,10 +37,10 @@ def create_map(grid_size):
     x_coord = 1
     y_coord = 1
     grid_size_counter = grid_size * grid_size
-    while (grid_size_counter):
+    while grid_size_counter:
         STATUS['game_grid'].append([x_coord, y_coord])
         x_coord += 1
-        if (x_coord == grid_size + 1):
+        if x_coord == grid_size + 1:
             y_coord += 1
             x_coord = 1
         grid_size_counter -= 1
@@ -53,52 +54,61 @@ def get_locations():
     """Returns the locations dict."""
     return STATUS['locations']
 
-
-def get_moves():
+# Too many returns - wy is this bad style?
+def get_moves(character):
     """Check available moves"""
     # If player's y coord is 0, they can't move down
     # If player's y coord is grid size, they can't move up
     # If player's x coord is 0, they can't move left
     # If player's x coord is grid size, they can't move right
-    x_coord = get_locations()['player'][0]
-    y_coord = get_locations()['player'][1]
-    if (x_coord == 1 and y_coord == 1):
+    if character == 'player':
+        x_coord = get_locations()['player'][0]
+        y_coord = get_locations()['player'][1]
+    elif character == 'monster':
+        x_coord = get_locations()['monster'][0]
+        y_coord = get_locations()['monster'][1]
+    if x_coord == 1 and y_coord == 1:
         return ['S', 'D']
-    elif (x_coord == STATUS['grid_size'] and y_coord == STATUS['grid_size']):
+    elif x_coord == STATUS['grid_size'] and y_coord == STATUS['grid_size']:
         return ['W', 'A']
-    elif (x_coord == 1 and y_coord == STATUS['grid_size']):
+    elif x_coord == 1 and y_coord == STATUS['grid_size']:
         return ['W', 'D']
-    elif (x_coord == STATUS['grid_size'] and y_coord == 1):
+    elif x_coord == STATUS['grid_size'] and y_coord == 1:
         return ['S', 'A']
-    elif (x_coord == 1):
+    elif x_coord == 1:
         return ['W', 'D', 'S']
-    elif (y_coord == 1):
+    elif y_coord == 1:
         return ['D', 'S', 'A']
-    elif (x_coord == STATUS['grid_size']):
+    elif x_coord == STATUS['grid_size']:
         return ['W', 'S', 'A']
-    elif (y_coord == STATUS['grid_size']):
+    elif y_coord == STATUS['grid_size']:
         return ['W', 'A', 'D']
     else:
         return ['W', 'D', 'S', 'A']
 
 
 def move_player(move):
-    if (move == 'W'):
+    """Moves the player sprite on the grid"""
+    if move == 'W':
         STATUS['locations']['player'][1] -= 1
-    elif (move == 'S'):
+    elif move == 'S':
         STATUS['locations']['player'][1] += 1
-    elif (move == 'A'):
+    elif move == 'A':
         STATUS['locations']['player'][0] -= 1
-    elif (move == 'D'):
+    elif move == 'D':
         STATUS['locations']['player'][0] += 1
     print(STATUS['locations']['player'])
+
+
+def move_monster():
+    """Moves the monster a random square every turn"""
 
 
 def get_dungeon_size():
     """Collect the player's choice of dungeon size. """
     size = input("Choose the size of the dungeon... (4 - 24)\n>")
     size = int(size)
-    while (size < 4 or size > 24):
+    while size < 4 or size > 24:
         print("Pick a number between four and 24.")
         size = input("Choose the size of the dungeon... (4 - 24)")
     return size
@@ -112,7 +122,7 @@ def draw_dungeon():
     print(" _" * grid_size)
     tile = "|{}"
     for cell in cells:
-        x, y = cell
+        x, y = cell #Surely this is just unpacking?
         if x < grid_size:
             line_end = ''
             if cell == player:
@@ -128,20 +138,20 @@ def draw_dungeon():
         print(output, end=line_end)
 
 
-# def monster_check():
-#     """Check how close the monster is"""
-#     player = get_locations()['player']
-#     monster = get_locations()['monster']
-#     if (player[0] + 1 == monster[0]):
-#         return "There are sounds of scuffling to the right.."
-#     elif (player[0] - 1 == monster[0]):
-#         return "There's a noise coing from ahead!"
-#     elif (player[1] + 1 == monster[1]):
-#         return "Something's snuffling behind."
-#     elif (player[1] - 1 == monster[1]):
-#         return "There's a scratching to the left.."
-#     else:
-#         return "Everything is quiet."
+def monster_check():
+    """Check how close the monster is"""
+    player = get_locations()['player']
+    monster = get_locations()['monster']
+    if player[0] + 1 == monster[0]:
+        return "There are sounds of scuffling to the right.."
+    elif player[0] - 1 == monster[0]:
+        return "There's a noise coing from ahead!"
+    elif player[1] + 1 == monster[1]:
+        return "Something's snuffling behind."
+    elif player[1] - 1 == monster[1]:
+        return "There's a scratching to the left.."
+    else:
+        return "Everything is quiet."
 
 
 def parse_moves(moves):
