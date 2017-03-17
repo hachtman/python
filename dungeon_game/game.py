@@ -19,7 +19,8 @@ STATUS = {
     'weapon': 'unarmed',
     'locations': {
         'player': [1, 1],
-        'monster': [1, 2],
+        'monster': None,
+        'weapon': None,
         'door': None
     }
 }
@@ -46,8 +47,16 @@ def create_map(grid_size):
         grid_size_counter -= 1
 
 
+def generate_random_coord(grid_size):
+    """Generate random coordinate"""
+    return random.randrange(1, grid_size)
+
+print(generate_random_coord)
+
+
 def set_locations():
     """Set the locations of the weapon and the monster"""
+    STATUS['locations']['monster']
 
 
 def get_locations():
@@ -57,10 +66,6 @@ def get_locations():
 # Too many returns - wy is this bad style?
 def get_moves(character):
     """Check available moves"""
-    # If player's y coord is 0, they can't move down
-    # If player's y coord is grid size, they can't move up
-    # If player's x coord is 0, they can't move left
-    # If player's x coord is grid size, they can't move right
     if character == 'player':
         x_coord = get_locations()['player'][0]
         y_coord = get_locations()['player'][1]
@@ -122,7 +127,7 @@ def draw_dungeon():
     print(" _" * grid_size)
     tile = "|{}"
     for cell in cells:
-        x, y = cell #Surely this is just unpacking?
+        x, y = cell  #Surely this is just unpacking?
         if x < grid_size:
             line_end = ''
             if cell == player:
