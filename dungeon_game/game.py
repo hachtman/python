@@ -16,9 +16,7 @@ import os
 STATUS = {
     'grid_size': 5,
     'door_open?': False,
-    'player': {
-        'weapon': False,
-    },
+    'weapon': 'unarmed',
     'locations': {
         'player': [1, 1],
         'monster': None,
@@ -64,36 +62,36 @@ def get_moves():
     # If player's x coord is 0, they can't move left
     # If player's x coord is grid size, they can't move right
     if (x_coord == 1 and y_coord == 1):
-        return ['DOWN', 'RIGHT']
+        return ['S', 'D']
     elif (x_coord == STATUS['grid_size'] and y_coord == STATUS['grid_size']):
-        return ['UP', 'LEFT']
+        return ['W', 'A']
     elif (x_coord == 1 and y_coord == STATUS['grid_size']):
-        return ['UP', 'RIGHT']
+        return ['W', 'D']
     elif (x_coord == STATUS['grid_size'] and y_coord == 1):
-        return ['UP', 'LEFT']
+        return ['S', 'A']
     elif (x_coord == 1):
-        return ['UP', 'RIGHT', 'DOWN']
+        return ['W', 'D', 'S']
     elif (y_coord == 1):
-        return ['RIGHT', 'UP', 'LEFT']
+        return ['D', 'S', 'A']
     elif (x_coord == STATUS['grid_size']):
-        return ['UP', 'DOWN', 'LEFT']
+        return ['W', 'S', 'A']
     elif (y_coord == STATUS['grid_size']):
-        return ['DOWN', 'LEFT', 'RIGHT']
+        return ['W', 'A', 'D']
     else:
-        return ['UP', 'RIGHT', 'DOWN', 'LEFT']
+        return ['W', 'D', 'S', 'A']
 
 
 print(get_moves())
 
 
 def move_player(move):
-    if (move == 'UP'):
+    if (move == 'W'):
         STATUS['locations']['player'][1] -= 1
-    elif (move == 'DOWN'):
+    elif (move == 'S'):
         STATUS['locations']['player'][1] += 1
-    elif (move == 'LEFT'):
+    elif (move == 'A'):
         STATUS['locations']['player'][0] -= 1
-    else:
+    elif (move == 'D'):
         STATUS['locations']['player'][0] += 1
     print(STATUS['locations']['player'])
 
@@ -130,18 +128,40 @@ def draw_dungeon():
         print(output, end=line_end)
 
 
+def monster_check():
+    player = get_locations()['player']
+    monster = get_locations()['monster']
+
+
+def parse_moves(moves):
+    possible_moves = []
+    for move in moves:
+        if move == 'W':
+            possible_moves.append('UP')
+        elif move == 'D':
+            possible_moves.append('RIGHT')
+        elif move == 'S':
+            possible_moves.append('DOWN')
+        elif move == 'A':
+            possible_moves.append('LEFT')
+    return possible_moves
+
 def run_game():
     while True:
         draw_dungeon()
         valid_moves = get_moves()
         print("You're currently in room {}.".format(STATUS['locations']['player']))
-        print("You can move {}".format(valid_moves))
+        print("You are currently {}.".format(STATUS['weapon']))
+        monster_check()
+
+        print("You can move {}".format(', '.join(parse_moves(valid_moves))))
         move = input("> ").upper()
         while move not in valid_moves:
             clear_screen()
-
             print("There's no door that way... ")
+            draw_dungeon()
             move = input("> ").upper()
+            clear_screen()
         else:
             clear_screen()
             move_player(move)
