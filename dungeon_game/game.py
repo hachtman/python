@@ -64,9 +64,9 @@ def get_moves():
     # If player's x coord is 0, they can't move left
     # If player's x coord is grid size, they can't move right
     if (x_coord == 1 and y_coord == 1):
-        return ['UP', 'RIGHT']
+        return ['DOWN', 'RIGHT']
     elif (x_coord == STATUS['grid_size'] and y_coord == STATUS['grid_size']):
-        return ['DOWN', 'LEFT']
+        return ['UP', 'LEFT']
     elif (x_coord == 1 and y_coord == STATUS['grid_size']):
         return ['UP', 'RIGHT']
     elif (x_coord == STATUS['grid_size'] and y_coord == 1):
@@ -132,19 +132,19 @@ def draw_dungeon():
 
 def run_game():
     while True:
+        draw_dungeon()
         valid_moves = get_moves()
         print("You're currently in room {}.".format(STATUS['locations']['player']))
         print("You can move {}".format(valid_moves))
         move = input("> ").upper()
         while move not in valid_moves:
             clear_screen()
-            draw_dungeon()
+
             print("There's no door that way... ")
             move = input("> ").upper()
         else:
             clear_screen()
             move_player(move)
-            draw_dungeon()
 
 
 def init():
