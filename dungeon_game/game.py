@@ -173,7 +173,7 @@ def run_game():
     """Main game control flow"""
     while True:
         draw_dungeon()
-        valid_moves = get_moves()
+        valid_moves = get_moves('player')
         print("You're currently in room {}.".format(STATUS['locations']['player']))
         print("You are currently {}.".format(STATUS['weapon']))
         print("{}".format(monster_check()))
