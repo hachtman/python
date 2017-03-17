@@ -20,7 +20,7 @@ STATUS = {
         'weapon': False,
     },
     'locations': {
-        'player': [3, 4],
+        'player': [1, 1],
         'monster': None,
         'door': None
     }
@@ -68,7 +68,7 @@ def get_moves():
     elif (x_coord == STATUS['grid_size'] and y_coord == STATUS['grid_size']):
         return ['DOWN', 'LEFT']
     elif (x_coord == 1 and y_coord == STATUS['grid_size']):
-        return ['DOWN', 'RIGHT']
+        return ['UP', 'RIGHT']
     elif (x_coord == STATUS['grid_size'] and y_coord == 1):
         return ['UP', 'LEFT']
     elif (x_coord == 1):
@@ -88,9 +88,9 @@ print(get_moves())
 
 def move_player(move):
     if (move == 'UP'):
-        STATUS['locations']['player'][1] += 1
-    elif (move == 'DOWN'):
         STATUS['locations']['player'][1] -= 1
+    elif (move == 'DOWN'):
+        STATUS['locations']['player'][1] += 1
     elif (move == 'LEFT'):
         STATUS['locations']['player'][0] -= 1
     else:
