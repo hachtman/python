@@ -19,7 +19,7 @@ STATUS = {
     'weapon': 'unarmed',
     'locations': {
         'player': [1, 1],
-        'monster': None,
+        'monster': [1, 2],
         'door': None
     }
 }
@@ -55,12 +55,13 @@ def get_locations():
 
 
 def get_moves():
-    x_coord = get_locations()['player'][0]
-    y_coord = get_locations()['player'][1]
+    """Check available moves"""
     # If player's y coord is 0, they can't move down
     # If player's y coord is grid size, they can't move up
     # If player's x coord is 0, they can't move left
     # If player's x coord is grid size, they can't move right
+    x_coord = get_locations()['player'][0]
+    y_coord = get_locations()['player'][1]
     if (x_coord == 1 and y_coord == 1):
         return ['S', 'D']
     elif (x_coord == STATUS['grid_size'] and y_coord == STATUS['grid_size']):
@@ -81,9 +82,6 @@ def get_moves():
         return ['W', 'D', 'S', 'A']
 
 
-print(get_moves())
-
-
 def move_player(move):
     if (move == 'W'):
         STATUS['locations']['player'][1] -= 1
@@ -97,6 +95,7 @@ def move_player(move):
 
 
 def get_dungeon_size():
+    """Collect the player's choice of dungeon size. """
     size = input("Choose the size of the dungeon... (4 - 24)\n>")
     size = int(size)
     while (size < 4 or size > 24):
@@ -106,6 +105,7 @@ def get_dungeon_size():
 
 
 def draw_dungeon():
+    """Print the dungeon to the screen"""
     grid_size = STATUS['grid_size']
     cells = STATUS['game_grid']
     player = get_locations()['player']
@@ -128,12 +128,24 @@ def draw_dungeon():
         print(output, end=line_end)
 
 
-def monster_check():
-    player = get_locations()['player']
-    monster = get_locations()['monster']
+# def monster_check():
+#     """Check how close the monster is"""
+#     player = get_locations()['player']
+#     monster = get_locations()['monster']
+#     if (player[0] + 1 == monster[0]):
+#         return "There are sounds of scuffling to the right.."
+#     elif (player[0] - 1 == monster[0]):
+#         return "There's a noise coing from ahead!"
+#     elif (player[1] + 1 == monster[1]):
+#         return "Something's snuffling behind."
+#     elif (player[1] - 1 == monster[1]):
+#         return "There's a scratching to the left.."
+#     else:
+#         return "Everything is quiet."
 
 
 def parse_moves(moves):
+    """Convert the actual move keys into legible text"""
     possible_moves = []
     for move in moves:
         if move == 'W':
@@ -146,14 +158,15 @@ def parse_moves(moves):
             possible_moves.append('LEFT')
     return possible_moves
 
+
 def run_game():
+    """Main game control flow"""
     while True:
         draw_dungeon()
         valid_moves = get_moves()
         print("You're currently in room {}.".format(STATUS['locations']['player']))
         print("You are currently {}.".format(STATUS['weapon']))
-        monster_check()
-
+        print("{}".format(monster_check()))
         print("You can move {}".format(', '.join(parse_moves(valid_moves))))
         move = input("> ").upper()
         while move not in valid_moves:
@@ -168,8 +181,9 @@ def run_game():
 
 
 def init():
+    """Initiliase the game"""
     clear_screen()
-    print("Welcome to the dungeon!\n*************************")
+    print("Welcome to the dungeon!\n**************************")
     print("Find the sword to kill the monster, then escape the dungeon.")
     create_map(get_dungeon_size())
     run_game()
