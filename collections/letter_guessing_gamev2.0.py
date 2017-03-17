@@ -57,33 +57,32 @@ def get_guess(bad_guesses, good_guesses):
         else:
             return guess
 
-def play(done):
+def play():
     clear()
-    secret = random.choice(WORDS)
-    bad_guesses = []
-    good_guesses = []
+    word = random.choice(WORDS)
+    bad_guesses = set()
+    good_guesses = set()
+    word_set = set(word)
 
     while True:
-        draw(bad_guesses, good_guesses, secret)
+        draw(bad_guesses, good_guesses, word_set)
         guess = get_guess(bad_guesses, good_guesses)
 
         while True:
             start = input("Press enter to start, or enter q to quit")
             if start.upper() == 'Q':
                 break
-            secret = random.choice(WORDS)
+            word_set = set(random.choice(WORDS))
             bad_guesses = []
             good_guesses = []
 
-            while len(bad_guesses) < 8 and len(good_guesses) != len(list(secret)):
+            while len(bad_guesses) < 8 and len(good_guesses) != len(list(word_set)):
 
-
-
-                if guess in secret:
+                if guess in word_set:
                     good_guesses.append(guess)
-                    if len(good_guesses) == len(secret):
-                        print('You won! The word was {}'.format(secret))
+                    if len(good_guesses) == len(word_set):
+                        print('You won! The word was {}'.format(word_set))
                 else:
                     bad_guesses.append(guess)
 
-main()
+play()
