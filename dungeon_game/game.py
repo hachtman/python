@@ -11,16 +11,18 @@
 
 """Dungeon RPG"""
 import random
+import math
 import os
 
 STATUS = {
     'grid_size': 5,
     'door_open?': False,
     'weapon': 'unarmed',
+    'hp': 15,
     'locations': {
         'player': [1, 1],
-        'monster': None,
-        'weapon': None,
+        'monster': [0, 0],
+        'weapon': [0, 0],
         'door': None
     }
 }
@@ -49,14 +51,17 @@ def create_map(grid_size):
 
 def generate_random_coord(grid_size):
     """Generate random coordinate"""
-    return random.randrange(1, grid_size)
+    return random.randrange(2, grid_size)
 
 print(generate_random_coord)
 
 
 def set_locations():
     """Set the locations of the weapon and the monster"""
-    STATUS['locations']['monster']
+    STATUS['locations']['monster'][0] = generate_random_coord(STATUS['grid_size'])
+    STATUS['locations']['monster'][1] = generate_random_coord(STATUS['grid_size'])
+    STATUS['locations']['weapon'][0] = generate_random_coord(STATUS['grid_size'])
+    STATUS['locations']['weapon'][1] = generate_random_coord(STATUS['grid_size'])
 
 
 def get_locations():
@@ -143,20 +148,27 @@ def draw_dungeon():
         print(output, end=line_end)
 
 
+
 def monster_check():
-    """Check how close the monster is"""
+    """Check if the player has touched the monster and therefore lost"""
     player = get_locations()['player']
     monster = get_locations()['monster']
-    if player[0] + 1 == monster[0]:
-        return "There are sounds of scuffling to the right.."
-    elif player[0] - 1 == monster[0]:
-        return "There's a noise coing from ahead!"
-    elif player[1] + 1 == monster[1]:
-        return "Something's snuffling behind."
-    elif player[1] - 1 == monster[1]:
-        return "There's a scratching to the left.."
-    else:
-        return "Everything is quiet."
+    if player == monster:
+        if STATUS['weapon'] == 'armed':
+            return "You killed the monster with the sword. A door slides open"
+        else:
+            if STATUS['hp'] > 0:
+                return "The monster caught you! You barely manage to escape..."
+            elif STATUS['hp'] <= 0:
+                return "The monster catachs you in its claws. Its not pretty."
+
+
+def weapon_check():
+    """Check if the player has found the weapon"""
+    if get_locations()['player'] == get_locations()['weapon']:
+        STATUS['weapon'] = 'armed'
+        STATUS['locations']['weapon'] = None
+        print("You found the weapon! Now go and kill the monster and take his key")
 
 
 def parse_moves(moves):
@@ -176,6 +188,7 @@ def parse_moves(moves):
 
 def run_game():
     """Main game control flow"""
+    set_locations()
     while True:
         draw_dungeon()
         valid_moves = get_moves('player')
@@ -193,6 +206,7 @@ def run_game():
         else:
             clear_screen()
             move_player(move)
+            weapon_check()
 
 
 def init():
