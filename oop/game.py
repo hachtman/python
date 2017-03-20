@@ -1,3 +1,5 @@
+import sys
+
 from character import Character
 
 from monster import Dragon
@@ -72,19 +74,22 @@ class Game:
 
 
     def clean_up(self):
-        # If the monster has no more hit points:
-            # Up the player's experience
-            # Print a message
-            # Get a new monster
+        if self.monster.hit_points <= 0:
+            self.player.experience += self.monster.experience
+            print("You killed {}!".format(self.monster()))
+            self.monster = self.get_next_monster()
 
     def __init__(self):
         self.setup()
 
         while self.player.hit_points and (self.monster or self.monsters):
+            print("\n" + "=" * 20)
             print(self.player)
             self.monster_turn()
+            print("-" * 20)
             self.player_turn()
             self.clean_up()
+            print("\n" + "=" * 20)
 
         if self.player.hit_points:
             print("You win!")
