@@ -25,7 +25,6 @@ class Monster(Combat):
 
 
     def __str__(self):
-        print('firing')
         return '{} {}, HP: {}, XP: {}.'.format(self.color.title(),
                                                self.__class__.__name__,
                                                self.hit_points,

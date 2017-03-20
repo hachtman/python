@@ -49,11 +49,11 @@ class Game:
     def player_turn(self):
         player_choice = input("Do you want to attack, rest or quit? (A/R/Q)").lower()
         if player_choice == 'a':
-            print("You're attacking the {}".format(self.monster()))
+            print("You're attacking the {}".format(self.monster))
 
             if self.player.attack():
                 if self.monster.dodge():
-                    print("{} dodged your attack!".format(self.monster()))
+                    print("{} dodged your attack!".format(self.monster))
                 else:
                     if self.player.leveled_up():
                         self.monster.hit_points -= 2
@@ -76,7 +76,7 @@ class Game:
     def clean_up(self):
         if self.monster.hit_points <= 0:
             self.player.experience += self.monster.experience
-            print("You killed {}!".format(self.monster()))
+            print("You killed {}!".format(self.monster))
             self.monster = self.get_next_monster()
 
     def __init__(self):
@@ -95,3 +95,7 @@ class Game:
             print("You win!")
         elif self.monsters or self.monster:
             print("You lose!")
+        sys.exit()
+
+
+Game()

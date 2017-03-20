@@ -5,7 +5,7 @@ class Combat:
     attack_limit = 6
 
     def dodge(self):
-        roll = random.radnint(1, self.odge_limit)
+        roll = random.randint(1, self.dodge_limit)
         return roll > 4
 
     def attack(self):
