@@ -1,7 +1,7 @@
 from peewee import *
 import psycopg2
 
-connection = psycopg2.connect(dbname='students', user='jackfuller', host='localhost')
+# connection = psycopg2.connect(dbname='students', user='jackfuller', host='localhost')
 
 db = PostgresqlDatabase('students')
 
@@ -31,11 +31,18 @@ def add_students():
             Student.create(username=student['username'],
                            points=student['points'])
         except IntegrityError:
+            db.rollback()
             student_record = Student.get(username=student['username'])
             student_record.points = student['points']
             student_record.save()
+
+
+def return_top_student():
+    student = Student.select().order_by(Student.points.desc()).get()
+    return student
 
 if __name__ == '__main__':
     db.connect()
     db.create_tables([Student], safe=True)
     add_students()
+    print("Our current top student is: {0.username}.".format(return_top_student()))
