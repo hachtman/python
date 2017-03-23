@@ -2,6 +2,7 @@
 from collections import OrderedDict
 import datetime
 import sys
+import os
 
 from peewee import *
 """Full peewee library"""
@@ -33,13 +34,14 @@ def view_entries(search_query=None):
         print(timestamp)
         print('=' * len(timestamp))
         print(entry.content)
-        print('=' * 20)
-        print('(N) for next entry')
-        print('(q) return to main menu')
+        print('=' * len(timestamp) + '\n\n')
+        print('(N) for next entry, (D) delete entry, (q) return to main menu')
 
         next_action = input("Action: (N/q)").lower().strip()
         if next_action == 'q':
             break
+        elif next_action == 'd':
+            delete_entry(entry)
 
 
 def search_entries():
@@ -49,6 +51,13 @@ def search_entries():
 
 def delete_entry(entry):
     """Delete an entry"""
+    if input("Are you sure? (y/N) ").lower() == 'y':
+        entry.delete_instance()
+        print('ENTRY REMOVED.')
+
+
+def clear_screen():
+    os.system('cls' if os.name == 'nt' else 'clear')
 
 
 menu = OrderedDict([
@@ -57,6 +66,8 @@ menu = OrderedDict([
     ('s', search_entries)
 ])
 
+
+
 class Entry(Model):
     content = TextField()
     timestamp = DateTimeField(default=datetime.datetime.now)
@@ -64,6 +75,7 @@ class Entry(Model):
 
     class Meta:
         database = db
+
 
 
 def initialise():
