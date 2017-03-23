@@ -3,6 +3,7 @@ from collections import OrderedDict
 import datetime
 import sys
 import os
+from termcolor import colored, cprint
 
 from peewee import *
 """Full peewee library"""
@@ -31,9 +32,10 @@ def view_entries(search_query=None):
                                 )
     for entry in entries:
         timestamp = entry.timestamp.strftime('%A %B %d, %Y %I:%M%p')
+        clear_screen()
         print(timestamp)
         print('=' * len(timestamp))
-        print(entry.content)
+        cprint(entry.content, 'green')
         print('=' * len(timestamp) + '\n\n')
         print('(N) for next entry, (D) delete entry, (q) return to main menu')
 
@@ -53,7 +55,7 @@ def delete_entry(entry):
     """Delete an entry"""
     if input("Are you sure? (y/N) ").lower() == 'y':
         entry.delete_instance()
-        print('ENTRY REMOVED.')
+        cprint('ENTRY REMOVED.', 'red')
 
 
 def clear_screen():
@@ -89,6 +91,7 @@ def menu_loop():
     choice = None
 
     while choice != 'q':
+        clear_screen()
         print("Enter 'q' to quit.")
         for key, value in menu.items():
             print("{}) {}".format(key, value.__doc__))
@@ -96,6 +99,7 @@ def menu_loop():
         choice = input('Action: ').lower().strip()
 
         if choice in menu:
+            clear_screen()
             menu[choice]()
 
 
