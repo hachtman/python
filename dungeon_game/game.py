@@ -1,29 +1,18 @@
-# 2d game with basic ascii graphics.
-# Move around the grid.
 
-# Draw the grid.
-# Randomise player, door and monster.
-# Draw player on grid
-# take iput for movement
-# move player unless invalid move
-# check win loss
-# clear screen and redraw grid.
-
-"""Dungeon RPG"""
+"""Dungeon RPG. Move around the dungeon to find the weapon. Then kill the monster."""
 import random
 import math
 import os
 
+
 STATUS = {
     'grid_size': 5,
-    'door_open?': False,
     'weapon': 'unarmed',
-    'hp': 15,
+    'hp': 20,
     'locations': {
         'player': [1, 1],
         'monster': [0, 0],
         'weapon': [0, 0],
-        'door': None
     }
 }
 
@@ -49,11 +38,13 @@ def create_map(grid_size):
         grid_size_counter -= 1
 
 
+
 def generate_random_coord(grid_size):
     """Generate random coordinate"""
     return random.randrange(2, grid_size)
 
-print(generate_random_coord)
+
+
 
 
 def set_locations():
@@ -114,6 +105,15 @@ def move_monster():
     """Moves the monster a random square every turn"""
 
 
+def play_again():
+    print("hellooooooooo")
+    play_again = input("Do you want to play again? (Y/N)").lower().strip()
+    if play_again == 'y':
+        init()
+    else:
+        exit()
+
+
 def get_dungeon_size():
     """Collect the player's choice of dungeon size. """
     size = input("Choose the size of the dungeon... (4 - 24)\n>")
@@ -148,19 +148,23 @@ def draw_dungeon():
         print(output, end=line_end)
 
 
-
 def monster_check():
     """Check if the player has touched the monster and therefore lost"""
     player = get_locations()['player']
     monster = get_locations()['monster']
     if player == monster:
         if STATUS['weapon'] == 'armed':
-            return "You killed the monster with the sword. A door slides open"
+            print("You killed the monster with the sword!")
+            play_again()
         else:
             if STATUS['hp'] > 0:
                 return "The monster caught you! You barely manage to escape..."
+                STATUS['hp'] -= 5
             elif STATUS['hp'] <= 0:
-                return "The monster catachs you in its claws. Its not pretty."
+                print("The monster catachs you in its claws. Its not pretty.")
+                play_again()
+    else:
+        return "Nothing in this room. Its around here somehwere though. "
 
 
 def weapon_check():
@@ -168,7 +172,7 @@ def weapon_check():
     if get_locations()['player'] == get_locations()['weapon']:
         STATUS['weapon'] = 'armed'
         STATUS['locations']['weapon'] = None
-        print("You found the weapon! Now go and kill the monster and take his key")
+        print("You found the weapon! Now go and kill the monster!")
 
 
 def parse_moves(moves):
@@ -195,7 +199,7 @@ def run_game():
         print("You're currently in room {}.".format(STATUS['locations']['player']))
         print("You are currently {}.".format(STATUS['weapon']))
         print("{}".format(monster_check()))
-        print("You can move {}".format(', '.join(parse_moves(valid_moves))))
+        print("You can move {} (w/a/s/d)".format(', '.join(parse_moves(valid_moves))))
         move = input("> ").upper()
         while move not in valid_moves:
             clear_screen()
