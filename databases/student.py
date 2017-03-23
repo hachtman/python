@@ -1,5 +1,5 @@
 from peewee import *
-import psycopg2
+# import psycopg2
 
 # connection = psycopg2.connect(dbname='students', user='jackfuller', host='localhost')
 
