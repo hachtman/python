@@ -23,7 +23,13 @@ def clear_screen():
 
 
 def create_map(grid_size):
-    """Draws a map of selected size"""
+    """Create and set alist of lists of the selected height
+
+    >>> create_map(4)
+    >>> len(STATUS['game_grid'])
+    16
+
+    """
     STATUS['game_grid'] = []  # Could be a tuple?
     STATUS['grid_size'] = grid_size
     x_coord = 1
@@ -44,24 +50,28 @@ def generate_random_coord(grid_size):
     return random.randrange(2, grid_size)
 
 
-
+def get_locations():
+    """Returns the locations dict."""
+    return STATUS['locations']
 
 
 def set_locations():
-    """Set the locations of the weapon and the monster"""
+    """Randomly set the locations of the weapon and the monster"""
     STATUS['locations']['monster'][0] = generate_random_coord(STATUS['grid_size'])
     STATUS['locations']['monster'][1] = generate_random_coord(STATUS['grid_size'])
     STATUS['locations']['weapon'][0] = generate_random_coord(STATUS['grid_size'])
     STATUS['locations']['weapon'][1] = generate_random_coord(STATUS['grid_size'])
 
 
-def get_locations():
-    """Returns the locations dict."""
-    return STATUS['locations']
-
 # Too many returns - wy is this bad style?
 def get_moves(character):
-    """Check available moves"""
+    """Check available moves based on the player's position and return them
+
+    >>> STATUS['locations']['player'] = [3, 3]
+    >>> get_moves('player')
+    ['W', 'D', 'S', 'A']
+
+    """
     if character == 'player':
         x_coord = get_locations()['player'][0]
         y_coord = get_locations()['player'][1]
@@ -101,10 +111,6 @@ def move_player(move):
     print(STATUS['locations']['player'])
 
 
-def move_monster():
-    """Moves the monster a random square every turn"""
-
-
 def play_again():
     print("hellooooooooo")
     play_again = input("Do you want to play again? (Y/N)").lower().strip()
@@ -115,12 +121,13 @@ def play_again():
 
 
 def get_dungeon_size():
-    """Collect the player's choice of dungeon size. """
+    """Collect the player's choice of dungeon size.    """
     size = input("Choose the size of the dungeon... (4 - 24)\n>")
     size = int(size)
     while size < 4 or size > 24:
         print("Pick a number between four and 24.")
-        size = input("Choose the size of the dungeon... (4 - 24)")
+        size = input("Choose the size of the dungeon... (4 - 24)\n>")
+        size = int(size)
     return size
 
 
@@ -132,7 +139,7 @@ def draw_dungeon():
     print(" _" * grid_size)
     tile = "|{}"
     for cell in cells:
-        x, y = cell  #Surely this is just unpacking?
+        x, y = cell  # Surely this is just unpacking?
         if x < grid_size:
             line_end = ''
             if cell == player:
@@ -149,7 +156,17 @@ def draw_dungeon():
 
 
 def monster_check():
-    """Check if the player has touched the monster and therefore lost"""
+    """Check if the player has touched the monster and either killed it,
+    been hurt or lost the game
+
+    >>> STATUS['locations']['player'] = [3, 4]
+    >>> STATUS['locations']['monster'] = [3, 4]
+    >>> STATUS['weapon'] = 'unarmed'
+    >>> STATUS['hp'] = 10
+    >>> monster_check()
+    'The monster caught you! You barely manage to escape...'
+
+    """
     player = get_locations()['player']
     monster = get_locations()['monster']
     if player == monster:
@@ -158,8 +175,8 @@ def monster_check():
             play_again()
         else:
             if STATUS['hp'] > 0:
-                return "The monster caught you! You barely manage to escape..."
                 STATUS['hp'] -= 5
+                return "The monster caught you! You barely manage to escape..."
             elif STATUS['hp'] <= 0:
                 print("The monster catachs you in its claws. Its not pretty.")
                 play_again()
@@ -168,7 +185,14 @@ def monster_check():
 
 
 def weapon_check():
-    """Check if the player has found the weapon"""
+    """Check if the player has found the weapon
+
+    >>> STATUS['locations']['player'] = [3, 4]
+    >>> STATUS['locations']['weapon'] = [3, 4]
+    >>> weapon_check()
+    You found the weapon! Now go and kill the monster!
+
+    """
     if get_locations()['player'] == get_locations()['weapon']:
         STATUS['weapon'] = 'armed'
         STATUS['locations']['weapon'] = None
@@ -176,7 +200,12 @@ def weapon_check():
 
 
 def parse_moves(moves):
-    """Convert the actual move keys into legible text"""
+    """Convert the actual move keys into legible text
+    >>> moves = ['W', 'A', 'D']
+    >>> parse_moves(moves)
+    ['UP', 'LEFT', 'RIGHT']
+
+    """
     possible_moves = []
     for move in moves:
         if move == 'W':
@@ -199,7 +228,8 @@ def run_game():
         print("You're currently in room {}.".format(STATUS['locations']['player']))
         print("You are currently {}.".format(STATUS['weapon']))
         print("{}".format(monster_check()))
-        print("You can move {} (w/a/s/d)".format(', '.join(parse_moves(valid_moves))))
+        print("You can move {} (w/a/s/d)"
+              .format(', '.join(parse_moves(valid_moves))))
         move = input("> ").upper()
         while move not in valid_moves:
             clear_screen()
@@ -222,4 +252,4 @@ def init():
     run_game()
 
 
-init()
+# init()
