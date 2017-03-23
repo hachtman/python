@@ -8,11 +8,22 @@ import datetime
 db = PostgresqlDatabase('diary')
 
 
+def add_entry():
+    """Add an entry"""
+
+
+def view_entries():
+    """View previous entries"""
+
+
+def delete_entry(entry):
+    """Delete an entry"""
+
+
 menu = OrderedDict([
     ('a', add_entry),
     ('v', view_entries),
 ])
-
 
 class Entry(Model):
     content = TextField()
@@ -37,22 +48,12 @@ def menu_loop():
         print("Enter 'q' to quit.")
         for key, value in menu.items():
             print("{}) {}".format(key, value.__doc__))
+            # dunder doc is the function's docstring.
         choice = input('Action: ').lower().strip()
 
         if choice in menu:
             menu[choice]()
 
-
-def add_entry():
-    """Add an entry"""
-
-
-def view_entries():
-    """View previous entries"""
-
-
-def delete_entry(entry):
-    """Delete an entry"""
 
 
 if __name__ == '__main__':
