@@ -3,6 +3,7 @@ import re
 
 die_pattern = re.compile(r'^(?P<num>\d+)d(?P<sides>\d+)$', re.I)
 
+CONST = []
 
 class Die:
     value = None
