@@ -13,4 +13,4 @@ def course_index(request):
 
 def course_show(request, pk):
     course = Course.objects.get(pk=pk)
-    return render(request, 'courses/course_show.html')
+    return render(request, 'courses/course_show.html', {'course': course})
