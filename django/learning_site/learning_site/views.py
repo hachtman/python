@@ -1,6 +1,6 @@
-from django.http import HttpResponse
+from django.shortcuts import render
 
 
 def hello_world(req):
-    print(req)
-    return HttpResponse('Hello World')
+    print(req, 'THIS IS A REQ TO HELLO WORLD')
+    return render(req, 'home.html')
