@@ -25,3 +25,20 @@ class Step(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class CourseViewTests(TestCase):
+    def setUp(self):
+        self.course = Course.objects.create(
+            title="Python Testing",
+            description="Learn to write tests in python"
+        )
+        self.course2 = Course.objects.create(
+            title="New Course...",
+            description="Coming Soon."
+        )
+        self.step = Step.ojects.create(
+            title="Introduction to Doctests",
+            description="Learn to write tests in your docstrings",
+            course=self.course
+        )
