@@ -7,7 +7,13 @@
     <title>{% block title %}{% endblock title %}</title>
   </head>
   <body>
-    {% block header %}{% endblock header %}
+    <nav>
+      <a href="{% url 'hello' %}">Home</a>
+      <a href="{% url 'list' %}">Courses</a>
+    </nav>
+    <div class="header">
+      {% block header %}{% endblock header %}
+    </div>
     <div class="site-container">
       {% block content %}{% endblock content %}
     </div>

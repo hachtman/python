@@ -19,9 +19,9 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from . import views
 
 urlpatterns = [
-    url(r'^courses/', include('courses.urls')),
+    url(r'^courses/', include('courses.urls'), name="courses"),
     url(r'^admin/', admin.site.urls),
-    url(r'^$', views.hello_world),  # Could this be '/' ?
+    url(r'^$', views.hello_world, name='hello'),  # Could this be '/' ?
 ]
 
 urlpatterns += staticfiles_urlpatterns()
