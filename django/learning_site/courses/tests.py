@@ -29,3 +29,31 @@ class StepModelTests(TestCase):
         )
         now = timezone.now()
         self.assertEqual(step.course, thing)
+
+
+class CourseViewTests(TestCase):
+    def setUp(self):
+        self.course = Course.objects.create(
+            title="Python Testing",
+            description="Learn to write tests in python"
+        )
+        self.course2 = Course.objects.create(
+            title="New Course...",
+            description="Coming Soon."
+        )
+        self.step = Step.objects.create(
+            title="Introduction to Doctests",
+            description="Learn to write tests in your docstrings",
+            course=self.course
+        )
+
+    def test_course_list_view(self):
+        response = self.client.get(reverse('list'))
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(self.course, response.context['courses'])
+        self.assertIn(self.course2, response.context['courses'])
+        self.assertTemplateUsed(response, 'courses/course_list.html')
+        self.assertContains(response, self.course.title)
+
+
+        
