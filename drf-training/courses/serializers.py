@@ -23,5 +23,9 @@ class ReviewSerializer(serializers.ModelSerializer):
 
 class CourseSerializer(serializers.ModelSerializer):
     class Meta:
-
+        fields = (
+            'id',
+            'title',
+            'url'
+        )
         model = models.Course
