@@ -10,4 +10,6 @@ Flask. The primary web server and framework for the project, Flask has great doc
 
 PeeWee, a great python ORM.
 
-Postgresql for the database.
+Postgres for the database.
+
+flask-login. Provides session management and handles logging in and out. Provides the UserMixin parent class, which adds several attributes and a method.

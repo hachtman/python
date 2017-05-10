@@ -1,12 +1,13 @@
 import datetime
 
+from flask.ext.login import UserMixin
 from peewee import *
 
 
 DATABASE = PostgresqlDatabase('social-network.db')
 
 
-class User(Model):
+class User(UserMixin, Model):
     username = CharField(unique=True)
     email = CharField(unique=True)
     password = CharField(max_length=100)
