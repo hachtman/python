@@ -1,5 +1,6 @@
-from flask_wtf import form
-from wtforms import StringField
+from flask_wtf import Form
+from flas_bcrypt import check_password_hash
+from wtforms import StringField, PasswordField
 from wtforms.validators import (DataRequired, Regexp,
                                 ValidationError, Email, Length, EqualTo)
 from models import User
@@ -10,7 +11,7 @@ def name_exists(form, field):
         raise ValidationError("A user with the name already exists.")
 
 
-def email_exists
+def email_exists(form, field):
     if User.select().where(User.email == field.data).exists():
         raise ValidationError("A user with the email already exists.")
 
@@ -38,6 +39,18 @@ class RegistrationForm(Form):
         validators=[
             DataRequired(),
             Length(min=8),
-            EqualTo('password2', message="Passwords must match.")
+            EqualTo('password_confirmation', message="Passwords must match.")
+        ])
+    password_confirmation = PasswordField(
+        'Password Confirmation',
+        validators=[DataRequired()])
+
+
+class LoginForm(Form):
+    email = StringField(
+        'Email',
+        validators=[
+            DataRequired()
+            Email()
         ]
     )
