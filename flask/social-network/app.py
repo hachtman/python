@@ -1,6 +1,7 @@
 from flask import (Flask, g, render_template, flash, redirect, url_for)
 
-from flask_login import LoginManager, login_user
+from flask_login import (LoginManager, login_user, logout_user,
+                         login_required)
 from flask_bcrypt import check_password_hash
 
 import forms
@@ -57,7 +58,7 @@ def register():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    form = forms.LoginForm
+    form = forms.LoginForm()
     if form.validate_on_submit():
         try:
             user = models.User.get(models.User.email == form.email.data)
@@ -71,6 +72,7 @@ def login():
             else:
                 flash("Your email or password doesn't match", "error")
     return render_template('login.html', form=form)
+
 
 @app.route('/')
 def index():

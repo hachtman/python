@@ -1,5 +1,5 @@
 from flask_wtf import Form
-from flas_bcrypt import check_password_hash
+from flask_bcrypt import check_password_hash
 from wtforms import StringField, PasswordField
 from wtforms.validators import (DataRequired, Regexp,
                                 ValidationError, Email, Length, EqualTo)
@@ -50,7 +50,9 @@ class LoginForm(Form):
     email = StringField(
         'Email',
         validators=[
-            DataRequired()
+            DataRequired(),
             Email()
-        ]
-    )
+        ])
+    password = PasswordField(
+        'Password',
+        validators=[DataRequired()])
