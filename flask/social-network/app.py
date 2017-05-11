@@ -1,6 +1,7 @@
-from flask import Flask, g
+from flask import (Flask, g, render_template, flash, redirect, url_for)
 from flask_login import LoginManager
 
+import forms
 import models
 
 DEBUG = True

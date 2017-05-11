@@ -1,5 +1,5 @@
 from flask_wtf import form
-from wtfroms import StringField
+from wtforms import StringField
 from wtforms.validators import (DataRequired, Regexp,
                                 ValidationError, Email, Length, EqualTo)
 from models import User
@@ -37,7 +37,7 @@ class RegistrationForm(Form):
         'Password',
         validators=[
             DataRequired(),
-            Length(min=2),
+            Length(min=8),
             EqualTo('password2', message="Passwords must match.")
         ]
     )
