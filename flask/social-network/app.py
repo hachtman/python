@@ -14,7 +14,6 @@ HOST = '0.0.0.0'
 app = Flask(__name__)
 app.secret_key = 'averysere312854c9n3t4inuc2fgu5ygtcy2gnfu2yu5£$^cc3455'
 
-
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
@@ -72,6 +71,14 @@ def login():
             else:
                 flash("Your email or password doesn't match", "error")
     return render_template('login.html', form=form)
+
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash('Successfully logged out', 'success')
+    return redirect(url_for('index'))
 
 
 @app.route('/')
