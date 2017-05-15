@@ -26,6 +26,7 @@ class User(UserMixin, Model):
             (Post.user == self)
         )
 
+
     @classmethod
     def create_user(cls, username, email, password, admin=False):
         try:

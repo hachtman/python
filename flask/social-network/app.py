@@ -1,6 +1,9 @@
 from flask import (Flask, g, render_template, flash, redirect, url_for)
 
-from flask_login import (LoginManager, login_user, logout_user,
+from flask_login import (LoginManager,
+                         logout_user,
+                         login_user,
+                         current_user,
                          login_required)
 from flask_bcrypt import check_password_hash
 
@@ -32,6 +35,7 @@ def before_request():
     """Connect to the db before each request."""
     g.db = models.DATABASE
     g.db.connect()
+    g.user = current_user
 
 
 @app.after_request
@@ -84,6 +88,19 @@ def logout():
 @app.route('/')
 def index():
     return "homepage"
+
+
+@app.route('/new_post', methods=['GET', 'POST'])
+@login_required
+def new_post():
+    form = forms.PostForm()
+    if form.validate_on_submit():
+        models.Post.create(user=g.user._get_current_object(),
+                           content=form.content.data.strip())
+        flash("Message posted! Thanks.", "success")
+        return redirect(url_for('index'))
+    return render_template('post.html', form=form)
+
 
 
 if __name__ == '__main__':
