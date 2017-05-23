@@ -1,3 +1,3 @@
 # python
-Python Prep
-Preparing to build an app in Django. 
+Python 
+Tooling around with some python
