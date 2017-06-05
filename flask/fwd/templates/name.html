@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Name</title>
+  </head>
+  <body>
+    {% if list %}
+      <h1>Hello,</h1>
+        {% for item in list %}
+          <li>{{ item }}</li>
+        {% endfor %}
+    {% else %}
+      <p>Who are ya?</p>
+    {% endif %}
+  </body>
+</html>
